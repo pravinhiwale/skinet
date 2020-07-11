@@ -1,0 +1,30 @@
+Code Refactoring
+PS C:\skinet> dotnet new classlib -o Core
+PS C:\skinet> dotnet new classlib -o Infrastructure
+PS C:\skinet> dotnet sln add Core
+PS C:\skinet> dotnet sln add Infrastructure
+PS C:\skinet> cd api
+PS C:\skinet\api> dotnet add reference ../Infrastructure
+PS C:\skinet> cd infrastructure
+PS C:\skinet\Infrastructure> donet add reference ../core
+PS C:\skinet> dotnet restore
+
+
+
+
+
+PS C:\skinet\Infrastructure> dotnet ef --startup-project ../API/ migrations add Initial
+dotnet ef --startup-project ../API/ database update
+
+
+GIt
+for initializing GIt
+ 
+Git init
+
+create a .gitignore file in root folder and files to ignore bin folder
+
+to add files 
+git add .
+git commit -m "Initia; Commit"
+
