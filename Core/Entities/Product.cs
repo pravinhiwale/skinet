@@ -1,10 +1,27 @@
+
 namespace Core.Entities
 {
-    public class Product
+    public class Product:BaseEntity
     {
-        public int Id { get; set; }
+        
         public string Name  { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+        public string PictureUrl { get; set; }
+        public ProductType ProductType { get; set; }
+       
+        public int ProductTypeId { get; set; }
+         //what we've created here are related entitites and the way that we've configured this all the way that we've added these properties in here to give 
+        // it the full type as well as the Id is to help our entity framework so that when it creates or when we create a new migration it's going to know 
+        //that the product has a relationship with both the product type and the product band and it's going to use this information to set up those relationships 
+        //for us as well as the foreign keys.
+        public ProductBrand ProductBrand { get; set; }
+        public int ProductBrandId { get; set; }  
 
+/*
+    in our product we have bunch of properties  
+
+*/
     }
 }
 

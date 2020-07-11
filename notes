@@ -14,6 +14,13 @@ PS C:\skinet> dotnet restore
 
 
 PS C:\skinet\Infrastructure> dotnet ef --startup-project ../API/ migrations add Initial
+or 
+PS C:\skinet> dotnet ef migrations add InitialCreate -p Infrastructure -s API -o ./Data/Migrations
+
+-p project
+-s Start up project
+-o output
+PS C:\skinet> dotnet ef migrations remove -p Infrastructure -s API
 dotnet ef --startup-project ../API/ database update
 
 
@@ -26,5 +33,15 @@ create a .gitignore file in root folder and files to ignore bin folder
 
 to add files 
 git add .
-git commit -m "Initia; Commit"
+git commit -m "Initial Commit"
 
+echo "# skinet" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/pravinhiwale/skinet.git
+git push -u origin master
+
+if git push fails execute below
+git config --global http.sslVerify false
+check this link for explanation 

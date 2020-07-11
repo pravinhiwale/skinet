@@ -1,3 +1,4 @@
+using System.Reflection;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,11 +21,17 @@ namespace Infrastructure.Data
         }
         
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductBrand> ProductBrands {get; set;}
+        public DbSet<ProductType> ProductTypes { get; set; }
         /*
         And this is going to be the plurals name of the entity and it doesn't have to be its convention that we're looking at here 
         but this "products" is gonna be the name of the table that gets created when we generate the code to generate our database
         
         */
+        protected  override void  OnModelCreating(ModelBuilder modelBuilder){
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
     }
 }
 
