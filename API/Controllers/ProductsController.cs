@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Dtos;
 using API.Errors;
+using API.Helpers;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
@@ -45,10 +46,18 @@ namespace API.Controllers
 
 
         }
-
+        /* in Below function because  we're sending up our parameters as a query string but we've told our API controller that these are and objects now (productspecParams) 
+        hen this is going to start to look at the body of the request and of course we don't have a body 
+        when we're using an httpget request and this is confusing our API controller ,it's not able to automatically bind these productparameters to method here.
+        So what we need to do is we need to tell our API to go and look for these properties in the query string and we can do that by specifying the fromquery attributes here.*/
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts()
-        {
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts(
+            //commenting below line to use pagination 
+        //public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts(
+            //string sort,int? brandId,int? typeId)
+            //since we neeed more params for paging , created a separate class for the params
+            [FromQuery]ProductSpecParams productParams)
+          {
             //var products = await _context.Products.ToListAsync();
             //var products = await _repo.GetProductsAsync();
 
@@ -57,9 +66,14 @@ namespace API.Controllers
             // return Ok(products);
 
             //using generics with specifications
-            var spec = new ProductsWithTypesAndBrandsSpecification();
+           // var spec = new ProductsWithTypesAndBrandsSpecification(sort,brandId,typeId); (commented because we created a separate class for params and we need to use that)
+           var spec = new ProductsWithTypesAndBrandsSpecification(productParams);
+           var countSpec = new ProductWithFiltersForCountSpecification(productParams);
+           var totalItems  = await _productsRepo.CountAsync(countSpec);
             var products = await _productsRepo.ListAsync(spec);
-            return Ok(_mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductToReturnDto>>(products));
+            var data = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductToReturnDto>>(products);
+           
+            return Ok(new Pagination<ProductToReturnDto>(productParams.PageIndex,productParams.PageSize,totalItems, data));
 
 
         }

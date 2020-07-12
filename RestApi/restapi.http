@@ -1,7 +1,7 @@
 GET Https://localhost:5001/weatherforecast HTTP/1.1
 
 ###
-GET Https://localhost:5001/api/products HTTP/1.1
+GET Https://localhost:5001/api/products?sort=priceAsc HTTP/1.1
 
 ###
 GET Https://localhost:5001/api/products/1 HTTP/1.1

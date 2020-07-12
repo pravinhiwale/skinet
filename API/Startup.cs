@@ -93,7 +93,11 @@ and then we pass in the instance of the concrete class and that's going to be th
             // });
             //moved above to swaggerExtensions
             services.AddSwagerDocumentation();
-            
+            services.AddCors( Opt =>{
+                Opt.AddPolicy("CorsPolicy",policy =>{
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+                });
+            });
 
             //clean up of startup class
             /*'re going to extend the IService collection class so that we can move some of our own classes or our own services.
@@ -126,12 +130,13 @@ and then we pass in the instance of the concrete class and that's going to be th
 
             app.UseRouting();
             app.UseStaticFiles();
+            app.UseCors("CorsPolicy");
             app.UseAuthorization();
             // app.UseSwagger();
             // app.UseSwaggerUI(c=>{c.SwaggerEndpoint("/swagger/v1/swagger.json","Skinet API v1");});
             //move above to extensions
             app.UseSwaggerDocumentation();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
