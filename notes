@@ -73,6 +73,15 @@ we need to add it as our middleware and ordering is important in middleware conf
 
 
 
+error codes
+
+
+Swagger
+Needs more improvement in documentation
+why?
+if we try to get a product which doesn't exit then we know 
+we should get a for a full response back from the controller but in swagger we don't get  because we haven't added the checking in this particular request to return the correct response
+what we get back is 204 response instead of a 404 response
 
 
 

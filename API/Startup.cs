@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Errors;
+using API.Extensions;
 using API.Helpers;
+using API.Middleware;
 using AutoMapper;
 using Core.Interfaces;
 using Infrastructure.Data;
@@ -15,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -50,8 +54,10 @@ And we don't ourselves need to worry about disposing of the resources created wh
 So in order to add our repository we can say that Addscoped and we'll pass in the Irepository and that shoulbe be IProdcutRepository
 and then we pass in the instance of the concrete class and that's going to be the ProductRepository
         */
-           services.AddScoped<IProductRepository,ProductRepository>();
-            services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
+        //    services.AddScoped<IProductRepository,ProductRepository>();
+        //     services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
+        //moved above 2 lines to extensions
+
             services.AddAutoMapper(typeof(MappingProfiles));
             //you need to add mapper and then we just need to specify the location of where our mapping profiles are located.
             //And when we say locationi it's really about the Assembly where we've created our mapping profile class and in order to do this we can just specify typeof.
@@ -65,26 +71,67 @@ and then we pass in the instance of the concrete class and that's going to be th
             ordering inside here doesn't really matter We can add our service wherever we want and it's going to be added to this Iservicecollection.
             */
             services.AddDbContext<StoreContext>(x => x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+
+            // services.Configure<ApiBehaviorOptions> (options => {
+            //     options.InvalidModelStateResponseFactory = actionContext=> {
+            //         var errors = actionContext.ModelState
+            //                     .Where(e =>e.Value.Errors.Count>0)
+            //                     .SelectMany(x=>x.Value.Errors)
+            //                     .Select(x=>x.ErrorMessage).ToArray();
+            //         var errorResponse = new ApiValidationErrorResponse
+            //         {
+            //             Errors = errors
+            //         };
+            //         return new BadRequestObjectResult(errorResponse);
+
+            //     };
+            // });
+            //moved above to extension
+            services.AddApplicationServices();
+            // services.AddSwaggerGen(c => {
+            //     c.SwaggerDoc("v1",new OpenApiInfo{Title ="SkiNet Api",Version="v1"});
+            // });
+            //moved above to swaggerExtensions
+            services.AddSwagerDocumentation();
+            
+
+            //clean up of startup class
+            /*'re going to extend the IService collection class so that we can move some of our own classes or our own services.
+            */
         }
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            // if (env.IsDevelopment())
+            // {
+            //     app.UseDeveloperExceptionPage();
+            // }
+            //Using our own middleware hence commenting above
+
+            app.UseMiddleware<ExceptionMiddleware>();
+
+
             /*
             when it comes to adding middleware in the configure method  the ordering is very important but for services we can just add them whereever please.
             */
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
+            //So in the event that request comes into our API server but we don't have an end point that matches that  particular request
+            // then we're going to hit this bit of middleware and it's going to redirect to our errors controller and pass in the status code 
+            //and in our errors controller in this particular route
+
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseStaticFiles();
             app.UseAuthorization();
-
+            // app.UseSwagger();
+            // app.UseSwaggerUI(c=>{c.SwaggerEndpoint("/swagger/v1/swagger.json","Skinet API v1");});
+            //move above to extensions
+            app.UseSwaggerDocumentation();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
