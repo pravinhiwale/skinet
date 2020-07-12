@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Helpers;
+using AutoMapper;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
@@ -49,7 +51,10 @@ So in order to add our repository we can say that Addscoped and we'll pass in th
 and then we pass in the instance of the concrete class and that's going to be the ProductRepository
         */
            services.AddScoped<IProductRepository,ProductRepository>();
-            
+            services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
+            services.AddAutoMapper(typeof(MappingProfiles));
+            //you need to add mapper and then we just need to specify the location of where our mapping profiles are located.
+            //And when we say locationi it's really about the Assembly where we've created our mapping profile class and in order to do this we can just specify typeof.
             services.AddControllers();
             /*
             after adding connectionString in AppSettings.development.json 
@@ -77,7 +82,7 @@ and then we pass in the instance of the concrete class and that's going to be th
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseStaticFiles();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

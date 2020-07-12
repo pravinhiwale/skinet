@@ -45,3 +45,41 @@ git push -u origin master
 if git push fails execute below
 git config --global http.sslVerify false
 check this link for explanation 
+
+git add .
+git commit -m "End of Section 3"
+
+
+Generic Repository
+the idea behind the generic repository is that we just have a single generic or a single repository
+that can be used with a hundred a thousand entities and we don't need to create any more repositories.
+We can just use the one and it's going to be quite small because it's generic,
+ the generic repository can sometimes have a bad reputation and that's because of how developers have used it in the past to get around the problem 
+ that a generic repository is just that it's generic and not all of your data access requests are going to be the same
+ some entities you want to bring back paginated  responses sometimes you want to filter them or sort in a certain way 
+ And as we'll see when we use a generic repository this makes it difficult to achieve.
+ So the way to get around this is to use the specification pattern.
+ So it kind of comes hand in hand when we use a generic repository 
+
+
+wwwroot 
+
+Our API is going to look for and any of the content inside here is going to serve up as it is.
+So inside our wwwroot folder is where we can store our static images and eventually we'll also use this folder to serve our angular projects as well.
+But for now what we'll do is we'll create a new folder inside here called images and paste images
+
+However that doesn't mean our API server is going to serve them because our API server has not been configured yet to serve static content.
+we need to add it as our middleware and ordering is important in middleware configuration
+
+
+
+
+
+
+
+
+
+
+
+
+
