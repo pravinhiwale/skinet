@@ -84,7 +84,7 @@ namespace API.Controllers
         Now this is just an example of how we can return and tell swagger about the correct type of responses.
         */
 
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             // return await _context.Products.FindAsync(id);
             //  we can still just use the return In this case we didn't have to specify "Ok" because if we return a product from this it's going to be 200 response Response anyway

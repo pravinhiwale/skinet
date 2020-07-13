@@ -126,7 +126,7 @@ and then we pass in the instance of the concrete class and that's going to be th
             //and in our errors controller in this particular route
 
 
-            app.UseHttpsRedirection();
+           // app.UseHttpsRedirection(); //https didn't work on my machine hence commenting
 
             app.UseRouting();
             app.UseStaticFiles();
