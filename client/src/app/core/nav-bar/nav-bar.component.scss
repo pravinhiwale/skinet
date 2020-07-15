@@ -11,6 +11,20 @@
     right:32px;
 }
 
+a {
+ text-decoration:none;  
+ color:#343a40;
+ &.active {
+    color:orange
+ }
+}
+.logo {
+    cursor:pointer;
+   &:focus {
+       outline:none
+   } 
+
+}
 /*
 we want this to have a position of absolute so that we can directly control where it fits on our 
 page and if we use position absolute in an element stand what we need to make sure is its parent element is set to position relative.
